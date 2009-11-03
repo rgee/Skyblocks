@@ -32,7 +32,7 @@ namespace Sky
         Model skyBoxModel;
         TextureCube skyboxTexture;
 
-        Skydome skybox;
+        OldSkyDome skybox;
 
         Player ship;
         Model shipModel;
@@ -100,7 +100,7 @@ namespace Sky
             diffuseFX = Content.Load<Effect>("Effects/Specular");
             blockModel = Content.Load<Model>("Models/Cube");
 
-            skybox = new Skydome();
+            skybox = new OldSkyDome();
             skybox.LoadContent(GraphicsDevice, skyBoxModel, skyboxTexture);
 
             floor = new PlaneEntity(this, floorModel, 15.0f);
