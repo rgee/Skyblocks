@@ -29,7 +29,7 @@ namespace Skyblocks
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
             }
 
-            backgroundTexture = content.Load<Texture2D>("Menus//Menu");
+            backgroundTexture = content.Load<Texture2D>("Menus//background");
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)

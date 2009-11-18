@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundScreen.cs" />
+    <Compile Include="GameplayScreen.cs" />
     <Compile Include="MainMenuScreen.cs" />
     <Compile Include="MenuEntry.cs" />
     <Compile Include="MenuScreen.cs" />

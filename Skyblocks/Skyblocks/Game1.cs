@@ -26,6 +26,9 @@ namespace Skyblocks
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
 
