@@ -100,6 +100,9 @@ namespace Skyblocks
 
             spriteBatch.DrawString(font, text, position, color, 0,
                                     origin, scale, SpriteEffects.None, 0);
+            screen.ScreenManager.GraphicsDevice.RenderState.DepthBufferEnable = true;
+            screen.ScreenManager.GraphicsDevice.RenderState.AlphaBlendEnable = false;
+            screen.ScreenManager.GraphicsDevice.RenderState.AlphaTestEnable = false;
         }
 
         public virtual int GetHeight(MenuScreen screen)

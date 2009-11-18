@@ -45,6 +45,10 @@ namespace Skyblocks
             byte fade = TransitionAlpha;
             spriteBatch.Begin(SpriteBlendMode.None);
             spriteBatch.Draw(backgroundTexture, fullscreen, new Color(fade, fade, fade));
+
+            ScreenManager.GraphicsDevice.RenderState.DepthBufferEnable = true;
+            ScreenManager.GraphicsDevice.RenderState.AlphaBlendEnable = false;
+            ScreenManager.GraphicsDevice.RenderState.AlphaTestEnable = false;
             spriteBatch.End();
         }
     }

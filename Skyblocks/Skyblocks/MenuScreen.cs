@@ -148,6 +148,10 @@ namespace Skyblocks
             spriteBatch.DrawString(font, menuTitle, titlePosition, titleColor, 0,
                                    titleOrigin, titleScale, SpriteEffects.None, 0);
 
+            ScreenManager.GraphicsDevice.RenderState.DepthBufferEnable = true;
+            ScreenManager.GraphicsDevice.RenderState.AlphaBlendEnable = false;
+            ScreenManager.GraphicsDevice.RenderState.AlphaTestEnable = false;
+
             spriteBatch.End();
 
         }
