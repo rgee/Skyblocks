@@ -71,7 +71,15 @@ namespace Skyblocks
 
         public override void HandleInput(InputState input)
         {
-            base.HandleInput(input);
+            if(input == null)
+            {
+                throw new ArgumentNullException("input");
+            }
+
+            if (input.IsPauseGame(ControllingPlayer))
+            {
+                ExitScreen();
+            }
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)

@@ -107,6 +107,11 @@ namespace Skyblocks
 
         public override void Update(GameTime gameTime)
         {
+            if (screens.Count == 0)
+            {
+                Game.Exit();
+            }
+
             input.Update();
 
             // Reset the update list

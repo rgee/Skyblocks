@@ -124,8 +124,9 @@ namespace Skyblocks
         /// <param name="controllingPlayer">The player to check input for. If null, will check for any player's input.</param>
         /// <param name="playerIndex">The index of the player who caused the pause game action.</param>
         /// <returns></returns>
-        public bool IsPauseGame(PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
+        public bool IsPauseGame(PlayerIndex? controllingPlayer)
         {
+            PlayerIndex playerIndex;
             return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex);
         }
 
