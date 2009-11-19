@@ -53,6 +53,7 @@ namespace Skyblocks
             {
                 selectedEntry++;
 
+
                 if (selectedEntry >= menuEntries.Count)
                 {
                     Trace.WriteLine("Rolling over the bottom");
@@ -98,7 +99,7 @@ namespace Skyblocks
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            for (int i = 0; i < menuEntries.Count - 1; i++)
+            for (int i = 0; i < menuEntries.Count; i++)
             {
                 bool isSelected = IsActive && (i == selectedEntry);
                 menuEntries[i].Update(this, isSelected, gameTime);
@@ -110,7 +111,7 @@ namespace Skyblocks
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
 
-            Vector2 position = new Vector2(100, 150);
+            Vector2 position = new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2, 200);
 
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 

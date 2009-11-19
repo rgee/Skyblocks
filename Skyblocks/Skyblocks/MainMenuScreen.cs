@@ -14,6 +14,7 @@ namespace Skyblocks
 
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
+            
 
             // Hook event handlers
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
