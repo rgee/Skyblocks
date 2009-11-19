@@ -85,6 +85,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackgroundScreen.cs" />
+    <Compile Include="Game Logic\Board2D.cs" />
+    <Compile Include="Game Logic\Camera.cs" />
+    <Compile Include="Game Logic\Piece.cs" />
     <Compile Include="GameplayScreen.cs" />
     <Compile Include="MainMenuScreen.cs" />
     <Compile Include="MenuEntry.cs" />
