@@ -50,8 +50,10 @@ namespace Skyblocks
         /// Constructor
         /// </summary>
         /// <param name="distance">Distance from the board. Should be calculated based on board size.</param>
-        public Camera(float distance, float aspectRatio)
+        public Camera(int boardWidth, int boardHeight, float aspectRatio)
         {
+            float distance = ((float)Math.Max(boardWidth, boardHeight) * 400.0f / 5.0f);
+
             this.distance = distance;
             position = new Vector3(0.0f, 0.0f, distance);
             viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);

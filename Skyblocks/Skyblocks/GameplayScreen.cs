@@ -16,9 +16,10 @@ namespace Skyblocks
         Texture2D helicopterDiffuseMap;
         Texture2D helicopterNormalMap;
 
+        Camera camera;
+        Board2D board;
+
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
-        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 10), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 1280f / 720f, 0.1f, 1000f);
         float angle = 0;
         float distance = 10;
 
@@ -31,6 +32,9 @@ namespace Skyblocks
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            board = new Board2D(20, 20);
+            camera = new Camera(board.Width, board.Height, 1280f / 720f);
         }
 
         public override void LoadContent()
@@ -47,6 +51,7 @@ namespace Skyblocks
         }
         public override void Draw(GameTime gameTime)
         {
+            
             foreach (ModelMesh mesh in helicopter.Meshes)
             {
                 foreach (ModelMeshPart part in mesh.MeshParts)
@@ -55,9 +60,9 @@ namespace Skyblocks
                     part.Effect = effect;
                     effect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTranspose);
                     effect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
-                    effect.Parameters["View"].SetValue(view);
+                    effect.Parameters["View"].SetValue(camera.ViewMatrix);
                     effect.Parameters["ViewVector"].SetValue(viewVector);
-                    effect.Parameters["Projection"].SetValue(projection);
+                    effect.Parameters["Projection"].SetValue(camera.ProjectionMatrix);
                     effect.Parameters["AmbientColor"].SetValue(Color.CornflowerBlue.ToVector4());
                     effect.Parameters["AmbientIntensity"].SetValue(0.5f);
                     effect.Parameters["ModelTexture"].SetValue(helicopterDiffuseMap);
