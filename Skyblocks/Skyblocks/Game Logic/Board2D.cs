@@ -23,6 +23,14 @@ namespace Skyblocks
             set { width = value; }
         }
 
+
+        private float pieceSpacing;
+
+        /// <summary>
+        /// The screen this board is associated with. 
+        /// </summary>
+        private GameplayScreen screen;
+
         private int height;
         /// <summary>
         /// How many cubes high is the board?
@@ -37,31 +45,88 @@ namespace Skyblocks
         /// 2D array of Piece representing the layout of the board. Used for
         /// game logic concerning the relative position of pieces on the board.
         /// </summary>
-        private Piece[,] layout;
+        private Block[,] layout;
 
+        private Matrix[] pieceTransforms;
 
         /// <summary>
         /// We keep a sequential copy of all of the pieces for fast iteration.
         /// </summary>
-        private List<Piece> pieces = new List<Piece>();
+        private List<Block> blocks = new List<Block>();
+        
         /// <summary>
-        /// A collection of pieces on the board.
+        /// A collection of blocks on the board.
         /// </summary>
-        public IEnumerable<Piece> Pieces
+        public IEnumerable<Block> Pieces
         {
-            get { return pieces; }
+            get { return blocks; }
         }
 
         /// <summary>
         /// 2D array of Matrices representing the position transforms
         /// to align each Piece into a grid.
         /// </summary>
-        private Matrix[,] layoutTransforms;
+        private Matrix[,] boardPositionMatrices;
         
-        public Board2D(int width, int height)
+        public Board2D(int width, int height, GameplayScreen screen)
         {
             this.width = width;
             this.height = height;
+            this.screen = screen;
+
+            this.layout = new Block[width, height];
+            this.boardPositionMatrices = new Matrix[width, height];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Block block = new Block();
+                    block.XLayoutPosition = x;
+                    block.YLayoutPosition = y;
+                    layout[x, y] = block;
+
+                    blocks.Add(block);
+                }
+            }
+        }
+
+        public void LoadContent()
+        {
+            foreach (Block block in blocks)
+                block.LoadContent(screen.Content);
+
+            pieceTransforms = new Matrix[blocks[0].Model.Bones.Count];
+            blocks[0].Model.CopyAbsoluteBoneTransformsTo(pieceTransforms);
+
+            float sphereScale = Math.Max(pieceTransforms[0].M11, pieceTransforms[0].M22);
+            float blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale;
+
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    
+
+                    Vector3 blockPos = new Vector3(
+                        (Width - 1) * -0.5f, (Height - 1) * -0.5f, 0.0f);
+                    blockPos += new Vector3(x, y, 0.0f);
+                    blockPos *= blockSize;
+
+                    Matrix transform = Matrix.CreateTranslation(blockPos);
+
+                    boardPositionMatrices[x, y] = transform;
+                    layout[x, y].World = transform;
+                }
+            }
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            foreach (Block block in blocks)
+            {
+                block.Draw(screen.Camera, gameTime);
+            }
         }
     }
 }

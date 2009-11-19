@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -54,10 +55,10 @@ namespace Skyblocks
         {
             float distance = ((float)Math.Max(boardWidth, boardHeight) * 400.0f / 5.0f);
 
-            this.distance = distance;
-            position = new Vector3(0.0f, 0.0f, distance);
+            this.distance = distance / 100;
+            Trace.WriteLine(this.distance.ToString());
+            position = new Vector3(0.0f, 0.0f, this.distance);
             viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
-
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f),
                 aspectRatio, 1.0f, 1000.0f);
         }

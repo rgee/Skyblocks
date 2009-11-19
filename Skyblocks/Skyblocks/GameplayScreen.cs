@@ -16,24 +16,34 @@ namespace Skyblocks
         Texture2D helicopterDiffuseMap;
         Texture2D helicopterNormalMap;
 
-        Camera camera;
+        private Camera camera;
+        /// <summary>
+        /// The current camera being used.
+        /// </summary>
+        public Camera Camera
+        {
+            get { return camera; }
+        }
         Board2D board;
-
-        Matrix world = Matrix.CreateTranslation(0, 0, 0);
+        
+        Matrix world =Matrix.CreateTranslation(0, 0, 0);
         float angle = 0;
         float distance = 10;
-
         Vector3 viewVector;
+        
 
-
-        ContentManager content;
+        private ContentManager content;
+        public ContentManager Content
+        {
+            get { return content; }
+        }
 
         public GameplayScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            board = new Board2D(20, 20);
+            board = new Board2D(20, 20, this);
             camera = new Camera(board.Width, board.Height, 1280f / 720f);
         }
 
@@ -48,10 +58,11 @@ namespace Skyblocks
             helicopter = content.Load<Model>("Models//Helicopter");
             helicopterDiffuseMap = content.Load<Texture2D>("Models//HelicopterTexture");
             helicopterNormalMap = content.Load<Texture2D>("Textures//HelicopterNormalMap");
+            board.LoadContent();
         }
         public override void Draw(GameTime gameTime)
         {
-            
+            /*
             foreach (ModelMesh mesh in helicopter.Meshes)
             {
                 foreach (ModelMeshPart part in mesh.MeshParts)
@@ -70,7 +81,8 @@ namespace Skyblocks
                 }
                 mesh.Draw();
             }
-
+            */
+            board.Draw(gameTime);
             base.Draw(gameTime);
         }
 
