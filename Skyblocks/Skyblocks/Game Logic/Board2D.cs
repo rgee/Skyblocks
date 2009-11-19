@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
@@ -70,6 +71,8 @@ namespace Skyblocks
         
         public Board2D(int width, int height, GameplayScreen screen)
         {
+            Debug.Assert((width <= 10) && (height <= 10));
+
             this.width = width;
             this.height = height;
             this.screen = screen;
@@ -100,7 +103,7 @@ namespace Skyblocks
             blocks[0].Model.CopyAbsoluteBoneTransformsTo(pieceTransforms);
 
             float sphereScale = Math.Max(pieceTransforms[0].M11, pieceTransforms[0].M22);
-            float blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale;
+            float blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale * 1.9f;
 
             for (int y = 0; y < Height; y++)
             {
