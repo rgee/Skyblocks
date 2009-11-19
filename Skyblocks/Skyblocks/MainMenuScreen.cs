@@ -34,6 +34,18 @@ namespace Skyblocks
             foreach (GameScreen screen in ScreenManager.GetScreens())
                 screen.ExitScreen();
             ScreenManager.AddScreen(new GameplayScreen(), null);
-        }        
+        }
+
+        /// <summary>
+        /// Since we know a cancel from this screen means exit the game,
+        /// exit the game after all screens transition out.
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        protected override void OnCancel(PlayerIndex playerIndex)
+        {
+            base.OnCancel(playerIndex);
+            foreach (GameScreen screen in ScreenManager.GetScreens())
+                screen.ExitScreen();
+        }
     }
 }
