@@ -7,3 +7,17 @@ C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\
 C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\obj\x86\Debug\Skyblocks.exe
 C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\obj\x86\Debug\Skyblocks.pdb
 C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\bin\x86\Debug\Content\Menus\Menu.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\obj\x86\Debug\Skyblocks.exe
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\obj\x86\Debug\Skyblocks.pdb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\menufont.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\blank.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\Menus\background.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\Models\HelicopterTexture.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\Textures\HelicopterNormalMap.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\Models\Helicopter.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\Shaders\NormalMap.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Content\Models\HelicopterTexture_0.xnb
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Skyblocks.exe
+C:\Users\Ryan\Desktop\Documents\Visual Studio 2008\Projects\Skyblocks\Skyblocks\Skyblocks\bin\x86\Debug\Skyblocks.pdb

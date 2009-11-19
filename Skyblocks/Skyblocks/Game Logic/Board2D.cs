@@ -58,7 +58,7 @@ namespace Skyblocks
         /// </summary>
         private Matrix[,] layoutTransforms;
         
-        public Board2D(int width, height)
+        public Board2D(int width, int height)
         {
             this.width = width;
             this.height = height;
