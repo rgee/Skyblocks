@@ -130,5 +130,93 @@ namespace Skyblocks
             return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex);
         }
 
+        /// <summary>
+        /// Allows the gameplay screen to determine if a player selects a block to the left.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSelectLeft(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Left, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Allows the gameplay screen to determine if a player selects a block to the right.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSelectRight(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Right, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Allows the gameplay screen to determine if a player selects a block below the current one.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSelectDown(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Down, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Allows the gameplay screen to determine if a player selects a block above the current one.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSelectUp(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Up, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Swap the selected block with the block to its left.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSwapLeft(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.A, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Swap the selected block with the block to its right.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSwapRight(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.D, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Swap the selected block with the block above it.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSwapUp(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.W, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Swap the selected block with the block below it.
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsSwapDown(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.S, controllingPlayer, out playerIndex);
+        }
+
     }
 }

@@ -14,6 +14,13 @@ namespace Skyblocks
     /// </summary>
     public class Board2D
     {
+        /// <summary>
+        /// An array that holds the two blocks that are currently shifting.
+        /// Logically, no more than two blocks should be shifting at a time
+        /// so we keep them here to perform special operations on them easily.
+        /// </summary>
+        private List<Block> shiftingBlocks = new List<Block>();
+
         private int width;
         /// <summary>
         /// How many cubes wide is the board?
@@ -25,7 +32,27 @@ namespace Skyblocks
         }
 
 
-        private float pieceSpacing;
+        private int selectedBlockX = 5;
+        private int selectedBlockY = 5;
+
+
+        /// <summary>
+        /// The X-coordinate (In board space.) of the selected block.
+        /// </summary>
+        public int SelectedBlockX
+        {
+            get { return selectedBlockX; }
+            set { selectedBlockX = value; }
+        }
+
+        /// <summary>
+        /// The Y-coordinate (In board space.) of the selected block.
+        /// </summary>
+        public int SelectedBlockY
+        {
+            get { return selectedBlockY; }
+            set { selectedBlockY = value; } 
+        }
 
         /// <summary>
         /// The screen this board is associated with. 
@@ -68,7 +95,21 @@ namespace Skyblocks
         /// to align each Piece into a grid.
         /// </summary>
         private Matrix[,] boardPositionMatrices;
-        
+
+
+
+        /// <summary>
+        /// Is the board currently performing an animated shift?
+        /// </summary>
+        public bool IsShifting
+        {
+            get { return shiftingBlocks.Count > 0; }
+        }
+
+        private const float shiftDuration = 0.1f;
+        float currentShiftTime;
+
+
         public Board2D(int width, int height, GameplayScreen screen)
         {
             Debug.Assert((width <= 10) && (height <= 10));
@@ -94,6 +135,19 @@ namespace Skyblocks
             }
         }
 
+        public void Update(GameTime gameTime)
+        {
+            if (IsShifting)
+            {
+                currentShiftTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (currentShiftTime > shiftDuration)
+                {
+                    shiftingBlocks.Clear();
+                }
+            }
+        }
+
         public void LoadContent()
         {
             foreach (Block block in blocks)
@@ -109,8 +163,6 @@ namespace Skyblocks
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    
-
                     Vector3 blockPos = new Vector3(
                         (Width - 1) * -0.5f, (Height - 1) * -0.5f, 0.0f);
                     blockPos += new Vector3(x, y, 0.0f);
@@ -124,12 +176,74 @@ namespace Skyblocks
             }
         }
 
+        /// <summary>
+        /// Draw each block.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
             foreach (Block block in blocks)
             {
-                block.Draw(screen.Camera, gameTime);
+                if (!shiftingBlocks.Contains(block))
+                {
+                    block.Draw(screen.Camera, gameTime);
+                }
             }
+
+            if (shiftingBlocks.Count > 0)
+            {
+                Matrix toTransform, fromTransform;
+
+                // Linearly interpolate between the world matrcies of the to and from blocks
+                // to eventually end up with them both in the other's original positioning.
+                Matrix.Lerp(ref boardPositionMatrices[shiftingBlocks[0].XLayoutPosition,
+                                                      shiftingBlocks[0].YLayoutPosition],
+                            ref boardPositionMatrices[shiftingBlocks[1].XLayoutPosition,
+                                                      shiftingBlocks[1].YLayoutPosition],
+                            currentShiftTime / shiftDuration,
+                            out fromTransform);
+
+                Matrix.Lerp(ref boardPositionMatrices[shiftingBlocks[1].XLayoutPosition,
+                                                      shiftingBlocks[1].YLayoutPosition],
+                            ref boardPositionMatrices[shiftingBlocks[0].XLayoutPosition,
+                                                      shiftingBlocks[0].YLayoutPosition],
+                            currentShiftTime / shiftDuration,
+                            out toTransform);
+
+                boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = fromTransform;
+                boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = toTransform;
+
+                shiftingBlocks[0].World *= fromTransform;
+                shiftingBlocks[1].World *= toTransform;
+
+                shiftingBlocks[0].Draw(screen.Camera, gameTime);
+                shiftingBlocks[1].Draw(screen.Camera, gameTime);
+            }
+
+        }
+
+        /// <summary>
+        /// Swap the current selected block with the one to its left.
+        /// </summary>
+        public void SwapLeft()
+        {
+            // Don't shift if the board is currently shifting.
+            if (IsShifting) return;
+
+            // Don't shift if the selected block is on the leftmost edge.
+            if (selectedBlockX == 0) return;
+
+            // Don't shift if there are no blocks to the left of the selected
+            // block.
+            if (!layout[selectedBlockX - 1, selectedBlockY].IsActive) return;
+
+            // Swap positions in the layout array.
+            layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
+            layout[selectedBlockX - 1, selectedBlockY] = shiftingBlocks[0];
+
+            // Tell the board to start shifting the selected blocks.
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
+            shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
         }
     }
 }

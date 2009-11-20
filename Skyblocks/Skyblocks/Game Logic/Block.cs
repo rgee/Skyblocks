@@ -22,9 +22,20 @@ namespace Skyblocks
             get { return model; }
         }
 
-        private Texture2D diffuseTexture;
+
+        private bool isActive = true;
+        /// <summary>
+        /// Is this block still on the board?
+        /// </summary>
+        public bool IsActive
+        {
+            get { return isActive; }
+        }
 
         private Matrix world;
+        /// <summary>
+        /// The world matrix for this block.
+        /// </summary>
         public Matrix World
         {
             get { return world; }
@@ -42,7 +53,6 @@ namespace Skyblocks
             set { xLayoutPosition = value; }
         }
 
-
         private int yLayoutPosition;
         /// <summary>
         /// This piece's Y position on the gird layout.
@@ -52,7 +62,6 @@ namespace Skyblocks
             get { return yLayoutPosition; }
             set { yLayoutPosition = value; }
         }
-
 
         public Block()
         {
@@ -64,28 +73,27 @@ namespace Skyblocks
             model = content.Load<Model>("Models//Cats");
         }
 
-        public void Update(GameTime gameTime)
-        {
-        }
-
         public void Draw(Camera cam, GameTime gameTime)
         {
-            Matrix[] transforms = new Matrix[model.Bones.Count];
-            model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in model.Meshes)
+            if (isActive)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                Matrix[] transforms = new Matrix[model.Bones.Count];
+                model.CopyAbsoluteBoneTransformsTo(transforms);
+
+                foreach (ModelMesh mesh in model.Meshes)
                 {
-                    effect.EnableDefaultLighting();
-                    effect.PreferPerPixelLighting = true;
-                    effect.World = world * transforms[mesh.ParentBone.Index] *
-                                    Matrix.CreateRotationX(MathHelper.ToRadians(90)) *
-                                    Matrix.CreateScale(new Vector3(1.0f, 1.0f, 0.1f));
-                    effect.View = cam.ViewMatrix;
-                    effect.Projection = cam.ProjectionMatrix;
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+                        effect.PreferPerPixelLighting = true;
+                        effect.World = world * transforms[mesh.ParentBone.Index] *
+                                        Matrix.CreateRotationX(MathHelper.ToRadians(90)) *
+                                        Matrix.CreateScale(new Vector3(1.0f, 1.0f, 0.1f));
+                        effect.View = cam.ViewMatrix;
+                        effect.Projection = cam.ProjectionMatrix;
+                    }
+                    mesh.Draw();
                 }
-                mesh.Draw();
             }
         }
     }
