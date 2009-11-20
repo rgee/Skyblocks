@@ -36,6 +36,8 @@ namespace Skyblocks
         private int selectedBlockY = 5;
 
 
+        private float blockSize;
+
         /// <summary>
         /// The X-coordinate (In board space.) of the selected block.
         /// </summary>
@@ -133,16 +135,22 @@ namespace Skyblocks
                     blocks.Add(block);
                 }
             }
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = true;
         }
 
         public void Update(GameTime gameTime)
         {
+
             if (IsShifting)
             {
                 currentShiftTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (currentShiftTime > shiftDuration)
                 {
+                    boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = shiftingBlocks[0].World;
+                    boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = shiftingBlocks[1].World;
+
                     shiftingBlocks.Clear();
                 }
             }
@@ -157,7 +165,7 @@ namespace Skyblocks
             blocks[0].Model.CopyAbsoluteBoneTransformsTo(pieceTransforms);
 
             float sphereScale = Math.Max(pieceTransforms[0].M11, pieceTransforms[0].M22);
-            float blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale * 1.9f;
+            blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale * 1.9f;
 
             for (int y = 0; y < Height; y++)
             {
@@ -202,19 +210,20 @@ namespace Skyblocks
                                                       shiftingBlocks[1].YLayoutPosition],
                             currentShiftTime / shiftDuration,
                             out fromTransform);
-
+                
                 Matrix.Lerp(ref boardPositionMatrices[shiftingBlocks[1].XLayoutPosition,
                                                       shiftingBlocks[1].YLayoutPosition],
                             ref boardPositionMatrices[shiftingBlocks[0].XLayoutPosition,
                                                       shiftingBlocks[0].YLayoutPosition],
                             currentShiftTime / shiftDuration,
-                            out toTransform);
+                            out toTransform); 
 
-                boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = fromTransform;
-                boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = toTransform;
+               // boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = fromTransform;
+               // boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = toTransform;
 
-                shiftingBlocks[0].World *= fromTransform;
-                shiftingBlocks[1].World *= toTransform;
+                shiftingBlocks[0].World = fromTransform;
+                shiftingBlocks[1].World = toTransform;
+
 
                 shiftingBlocks[0].Draw(screen.Camera, gameTime);
                 shiftingBlocks[1].Draw(screen.Camera, gameTime);
@@ -237,13 +246,66 @@ namespace Skyblocks
             // block.
             if (!layout[selectedBlockX - 1, selectedBlockY].IsActive) return;
 
+            // Tell the board to start shifting the selected blocks.
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
+            shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
+
             // Swap positions in the layout array.
             layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
             layout[selectedBlockX - 1, selectedBlockY] = shiftingBlocks[0];
 
-            // Tell the board to start shifting the selected blocks.
-            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
-            shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
+        }
+
+        /// <summary>
+        /// Select the block to the left of the current one.
+        /// </summary>
+        public void SelectLeft()
+        {
+            if (selectedBlockX == 0) return;
+            if (!layout[selectedBlockX - 1, selectedBlockY].IsActive) return;
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            selectedBlockX--;
+            layout[selectedBlockX, selectedBlockY].IsSelected = true;
+        }
+
+        /// <summary>
+        /// Select the block to the right of the current one.
+        /// </summary>
+        public void SelectRight()
+        {
+            if (selectedBlockX == width - 1) return;
+            if (!layout[selectedBlockX + 1, selectedBlockY].IsActive) return;
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            selectedBlockX++;
+            layout[selectedBlockX, selectedBlockY].IsSelected = true;
+        }
+
+        /// <summary>
+        /// Select the block below the current one.
+        /// </summary>
+        public void SelectDown()
+        {
+            if (selectedBlockY == 0) return;
+            if (!layout[selectedBlockX, selectedBlockY - 1].IsActive) return;
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            selectedBlockY--;
+            layout[selectedBlockX, selectedBlockY].IsSelected = true;
+        }
+
+        /// <summary>
+        /// Select the block above the current one.
+        /// </summary>
+        public void SelectUp()
+        {
+            if (selectedBlockY == height - 1) return;
+            if (!layout[selectedBlockX, selectedBlockY + 1].IsActive) return;
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            selectedBlockY++;
+            layout[selectedBlockX, selectedBlockY].IsSelected = true;
         }
     }
 }

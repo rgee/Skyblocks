@@ -63,6 +63,13 @@ namespace Skyblocks
             set { yLayoutPosition = value; }
         }
 
+        private bool isSelected;
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; }
+        }
+
         public Block()
         {
             
@@ -89,6 +96,14 @@ namespace Skyblocks
                         effect.World = world * transforms[mesh.ParentBone.Index] *
                                         Matrix.CreateRotationX(MathHelper.ToRadians(90)) *
                                         Matrix.CreateScale(new Vector3(1.0f, 1.0f, 0.1f));
+                        if (isSelected)
+                        {
+                            effect.AmbientLightColor = new Vector3(0.9f, 0.9f, 0.9f);
+                        }
+                        else
+                        {
+                            effect.AmbientLightColor = new Vector3(0f, 0f, 0f);
+                        }
                         effect.View = cam.ViewMatrix;
                         effect.Projection = cam.ProjectionMatrix;
                     }

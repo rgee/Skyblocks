@@ -79,6 +79,25 @@ namespace Skyblocks
                 ExitScreen();
             }
 
+            if (input.IsSelectLeft(ControllingPlayer))
+            {
+                board.SelectLeft();
+            }
+
+            if (input.IsSelectRight(ControllingPlayer))
+            {
+                board.SelectRight();
+            }
+
+            if (input.IsSelectUp(ControllingPlayer))
+            {
+                board.SelectUp();
+            }
+
+            if (input.IsSelectDown(ControllingPlayer))
+            {
+                board.SelectDown();
+            }
 
             if (input.IsSwapLeft(ControllingPlayer))
             {
