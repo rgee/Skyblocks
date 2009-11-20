@@ -19,7 +19,7 @@ namespace Skyblocks
             get { return position; }
             set { position = value; }
         }
-
+        
         private Matrix viewMatrix;
         /// <summary>
         /// The view matrix for this camera.
@@ -47,6 +47,23 @@ namespace Skyblocks
             get { return distance; }
         }
 
+        private float currentHRotationAngle = 0.0f;
+        private float targetHRotationAngle;
+        private float currentVRotationAngle = 0.0f;
+        private float targetVRotationAngle;
+
+        private float cameraRotateCurrentTime;
+        private float cameraRotateTotalTime;
+
+
+        public enum ShiftState
+        {
+            Right,
+            Left,
+            Up,
+            Down
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -61,6 +78,51 @@ namespace Skyblocks
             viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f),
                 aspectRatio, 1.0f, 1000.0f);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            
+            if (cameraRotateCurrentTime >= cameraRotateTotalTime)
+            {
+                Trace.WriteLine("Done animating");
+                currentHRotationAngle = currentVRotationAngle = 0.0f;
+                cameraRotateCurrentTime = 0.0f;
+                cameraRotateTotalTime = 0.0f;
+            }
+            else if (cameraRotateTotalTime != 0.0f)
+            {
+                cameraRotateCurrentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Trace.WriteLine("Animating");
+                float fraction = cameraRotateCurrentTime / cameraRotateTotalTime;
+                currentHRotationAngle = MathHelper.SmoothStep(currentHRotationAngle, targetHRotationAngle, fraction);
+
+                position = Vector3.Transform(position, Matrix.CreateRotationY(MathHelper.ToRadians(currentHRotationAngle)) *
+                                                       Matrix.CreateRotationX(MathHelper.ToRadians(currentVRotationAngle)));
+
+                viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
+            }
+
+        }
+
+        public void TurnBoard(ShiftState state)
+        {
+            cameraRotateTotalTime = 0.6f;
+            switch (state)
+            {
+                case ShiftState.Up:
+                    targetVRotationAngle = 90f;
+                    break;
+                case ShiftState.Down:
+                    targetVRotationAngle = -90f;
+                    break;
+                case ShiftState.Right:
+                    targetHRotationAngle = 90f;
+                    break;
+                case ShiftState.Left:
+                    targetHRotationAngle = -90f;
+                    break;
+            }
         }
     }
 }

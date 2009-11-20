@@ -103,11 +103,17 @@ namespace Skyblocks
             {
                 board.SwapLeft();
             }
+
+            if (input.IsTurnLeft(ControllingPlayer))
+            {
+                camera.TurnBoard(Camera.ShiftState.Left);
+            }
         }
 
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             board.Update(gameTime);
+            camera.Update(gameTime);
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 

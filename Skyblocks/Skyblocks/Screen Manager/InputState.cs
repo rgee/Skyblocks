@@ -218,5 +218,10 @@ namespace Skyblocks
             return IsNewKeyPress(Keys.S, controllingPlayer, out playerIndex);
         }
 
+        public bool IsTurnLeft(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Q, controllingPlayer, out playerIndex);
+        }
     }
 }
