@@ -26,7 +26,10 @@ namespace Skyblocks
         /// </summary>
         public Matrix ViewMatrix
         {
-            get { return viewMatrix; }
+            get
+            {
+                return Matrix.CreateLookAt(CurrentPosition, new Vector3(0, 0, 0), Vector3.Up);
+            }
         }
 
         private Matrix projectionMatrix;
@@ -47,15 +50,30 @@ namespace Skyblocks
             get { return distance; }
         }
 
-        private float currentHRotationAngle = 0.0f;
-        private float targetHRotationAngle;
-        private float currentVRotationAngle = 0.0f;
-        private float targetVRotationAngle;
+        /// <summary>
+        /// Positions to move between during transitions
+        /// </summary>
+        private Vector3 destPosition, prevPosition;
 
-        private float cameraRotateCurrentTime;
-        private float cameraRotateTotalTime;
+        /// <summary>
+        /// Counter for transition length.
+        /// </summary>
+        private float transitionAmount;
 
+        /// <summary>
+        /// Get the current position of the camera.
+        /// </summary>
+        Vector3 CurrentPosition
+        {
+            get
+            {
+                return Vector3.Lerp(prevPosition, destPosition, transitionAmount);
+            }
+        }
 
+        /// <summary>
+        /// Describes the direction the camera is supposed to shift in.
+        /// </summary>
         public enum ShiftState
         {
             Right,
@@ -74,55 +92,60 @@ namespace Skyblocks
 
             this.distance = distance / 100;
             Trace.WriteLine(this.distance.ToString());
+
+            prevPosition = new Vector3(0.0f, 0.0f, this.distance);
+            destPosition = prevPosition;
+
             position = new Vector3(0.0f, 0.0f, this.distance);
             viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45f),
                 aspectRatio, 1.0f, 1000.0f);
         }
 
+        /// <summary>
+        /// Update logic
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
-            
-            if (cameraRotateCurrentTime >= cameraRotateTotalTime)
-            {
-                Trace.WriteLine("Done animating");
-                currentHRotationAngle = currentVRotationAngle = 0.0f;
-                cameraRotateCurrentTime = 0.0f;
-                cameraRotateTotalTime = 0.0f;
-            }
-            else if (cameraRotateTotalTime != 0.0f)
-            {
-                cameraRotateCurrentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                Trace.WriteLine("Animating");
-                float fraction = cameraRotateCurrentTime / cameraRotateTotalTime;
-                currentHRotationAngle = MathHelper.SmoothStep(currentHRotationAngle, targetHRotationAngle, fraction);
-
-                position = Vector3.Transform(position, Matrix.CreateRotationY(MathHelper.ToRadians(currentHRotationAngle)) *
-                                                       Matrix.CreateRotationX(MathHelper.ToRadians(currentVRotationAngle)));
-
-                viewMatrix = Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
-            }
+            if (transitionAmount < 1.0f)
+                transitionAmount += 0.02f;
 
         }
 
+        /// <summary>
+        /// Rotates the camera about theboard in the specifed direction.
+        /// </summary>
+        /// <param name="state">The direction in which to turn.</param>
         public void TurnBoard(ShiftState state)
         {
-            cameraRotateTotalTime = 0.6f;
+
             switch (state)
             {
                 case ShiftState.Up:
-                    targetVRotationAngle = 90f;
+                    prevPosition = destPosition;
+                    destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationX(MathHelper.ToRadians(-90)));
+                    transitionAmount = 0.0f;
                     break;
                 case ShiftState.Down:
-                    targetVRotationAngle = -90f;
+                    prevPosition = destPosition;
+                    destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationX(MathHelper.ToRadians(90)));
+                    transitionAmount = 0.0f;
                     break;
                 case ShiftState.Right:
-                    targetHRotationAngle = 90f;
+                    prevPosition = destPosition;
+                    destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationY(MathHelper.ToRadians(90)));
+                    transitionAmount = 0.0f;
                     break;
                 case ShiftState.Left:
-                    targetHRotationAngle = -90f;
+                    prevPosition = destPosition;
+                    destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationY(MathHelper.ToRadians(-90)));
+                    transitionAmount = 0.0f;
                     break;
             }
+
+
+
         }
     }
 }

@@ -182,7 +182,8 @@ namespace Skyblocks
         public bool IsSwapLeft(PlayerIndex? controllingPlayer)
         {
             PlayerIndex playerIndex;
-            return IsNewKeyPress(Keys.A, controllingPlayer, out playerIndex);
+            return IsNewKeyPress(Keys.A, controllingPlayer, out playerIndex) &&
+                !IsNewKeyPress(Keys.LeftControl, controllingPlayer, out playerIndex);
         }
 
         /// <summary>
@@ -221,7 +222,25 @@ namespace Skyblocks
         public bool IsTurnLeft(PlayerIndex? controllingPlayer)
         {
             PlayerIndex playerIndex;
-            return IsNewKeyPress(Keys.Q, controllingPlayer, out playerIndex);
+            return IsNewKeyPress(Keys.NumPad4, controllingPlayer, out playerIndex);
+        }
+
+        public bool IsTurnRight(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.NumPad6, controllingPlayer, out playerIndex);
+        }
+
+        public bool IsTurnUp(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.NumPad8, controllingPlayer, out playerIndex);
+        }
+
+        public bool IsTurnDown(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.NumPad2, controllingPlayer, out playerIndex);
         }
     }
 }
