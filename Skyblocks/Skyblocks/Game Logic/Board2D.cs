@@ -92,13 +92,6 @@ namespace Skyblocks
             get { return blocks; }
         }
 
-        /// <summary>
-        /// 2D array of Matrices representing the position transforms
-        /// to align each Piece into a grid.
-        /// </summary>
-        private Matrix[,] boardPositionMatrices;
-
-
 
         /// <summary>
         /// Is the board currently performing an animated shift?
@@ -118,7 +111,6 @@ namespace Skyblocks
             this.screen = screen;
 
             this.layout = new Block[width, height];
-            this.boardPositionMatrices = new Matrix[width, height];
 
             for (int y = 0; y < height; y++)
             {
@@ -141,12 +133,9 @@ namespace Skyblocks
 
             if (IsShifting)
             {
-
                 shiftingBlocks[0].Update();
                 shiftingBlocks[1].Update();
 
-                boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = shiftingBlocks[0].CurrentWorld;
-                boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = shiftingBlocks[1].CurrentWorld;
 
                 if (shiftingBlocks[0].TransitionAmount == 1.0f && shiftingBlocks[1].TransitionAmount == 1.0f)
                     shiftingBlocks.Clear();
@@ -161,6 +150,7 @@ namespace Skyblocks
             pieceTransforms = new Matrix[blocks[0].Model.Bones.Count];
             blocks[0].Model.CopyAbsoluteBoneTransformsTo(pieceTransforms);
 
+            // Get the size of each block from it's bounding sphere.
             float sphereScale = Math.Max(pieceTransforms[0].M11, pieceTransforms[0].M22);
             blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale * 1.9f;
 
@@ -168,14 +158,14 @@ namespace Skyblocks
             {
                 for (int x = 0; x < Width; x++)
                 {
+                    // Align the grid
+
                     Vector3 blockPos = new Vector3(
                         (Width - 1) * -0.5f, (Height - 1) * -0.5f, 0.0f);
                     blockPos += new Vector3(x, y, 0.0f);
                     blockPos *= blockSize;
 
                     Matrix transform = Matrix.CreateTranslation(blockPos);
-
-                    boardPositionMatrices[x, y] = transform;
                     layout[x, y].Destination = layout[x, y].PrevLocation = transform;
                 }
             }
@@ -189,23 +179,13 @@ namespace Skyblocks
         {
             foreach (Block block in blocks)
             {
-                if (!shiftingBlocks.Contains(block))
-                {
-                    block.Draw(screen.Camera, gameTime);
-                }
-            }
-
-            if (shiftingBlocks.Count > 0)
-            {
-
-                shiftingBlocks[0].Draw(screen.Camera, gameTime);
-                shiftingBlocks[1].Draw(screen.Camera, gameTime);
+                block.Draw(screen.Camera, gameTime);
             }
 
         }
 
         /// <summary>
-        /// Swap the current selected block with the one to its left.
+        /// Swap the selected block with the block to its left.
         /// </summary>
         public void SwapLeft()
         {
@@ -246,12 +226,15 @@ namespace Skyblocks
             shiftingBlocks[1].TransitionAmount = 0.0f;
         }
 
+        /// <summary>
+        /// Swap the selected block with the block to its right.
+        /// </summary>
         public void SwapRight()
         {
             // Don't shift if the board is currently shifting.
             if (IsShifting) return;
 
-            // Don't shift if the selected block is on the leftmost edge.
+            // Don't shift if the selected block is on the edge.
             if (selectedBlockX == Width - 1) return;
 
             // Don't shift if there are no blocks to the left of the selected
@@ -285,13 +268,15 @@ namespace Skyblocks
             shiftingBlocks[1].TransitionAmount = 0.0f;
         }
 
-
+        /// <summary>
+        /// Swap the selected block with the block below it.
+        /// </summary>
         public void SwapDown()
         {
             // Don't shift if the board is currently shifting.
             if (IsShifting) return;
 
-            // Don't shift if the selected block is on the leftmost edge.
+            // Don't shift if the selected block is on the edge.
             if (selectedBlockY == 0) return;
 
             // Don't shift if there are no blocks to the left of the selected
@@ -325,12 +310,15 @@ namespace Skyblocks
             shiftingBlocks[1].TransitionAmount = 0.0f;
         }
 
+        /// <summary>
+        /// Swap the selected block with the one above it.
+        /// </summary>
         public void SwapUp()
         {
             // Don't shift if the board is currently shifting.
             if (IsShifting) return;
 
-            // Don't shift if the selected block is on the leftmost edge.
+            // Don't shift if the selected block is on the edge.
             if (selectedBlockY == Height - 1) return;
 
             // Don't shift if there are no blocks to the left of the selected

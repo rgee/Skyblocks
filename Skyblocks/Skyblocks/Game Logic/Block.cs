@@ -61,14 +61,20 @@ namespace Skyblocks
         }
 
 
+        private Matrix destination, prevLocation;
 
-        Matrix destination, prevLocation;
-
+        /// <summary>
+        /// This block's location to move to.
+        /// </summary>
         public Matrix Destination
         {
             get { return destination; }
             set { destination = value; }
         }
+
+        /// <summary>
+        /// This block's previous location.
+        /// </summary>
         public Matrix PrevLocation
         {
             get { return prevLocation; }
@@ -77,12 +83,20 @@ namespace Skyblocks
 
 
         float transitionAmount = 1.0f;
+        /// <summary>
+        /// The status of this block's transition. 1.0 means it is finished and not
+        /// transitioning. 
+        /// </summary>
         public float TransitionAmount
         {
             get { return transitionAmount; }
             set { transitionAmount = value; }
         }
 
+
+        /// <summary>
+        /// The current world matrix for this block.
+        /// </summary>
         public Matrix CurrentWorld
         {
             get
