@@ -108,9 +108,6 @@ namespace Skyblocks
             get { return shiftingBlocks.Count > 0; }
         }
 
-        private const float shiftDuration = 0.1f;
-        float currentShiftTime;
-
 
         public Board2D(int width, int height, GameplayScreen screen)
         {
@@ -144,15 +141,15 @@ namespace Skyblocks
 
             if (IsShifting)
             {
-                currentShiftTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (currentShiftTime > shiftDuration)
-                {
-                    boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = shiftingBlocks[0].World;
-                    boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = shiftingBlocks[1].World;
+                shiftingBlocks[0].Update();
+                shiftingBlocks[1].Update();
 
+                boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = shiftingBlocks[0].CurrentWorld;
+                boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = shiftingBlocks[1].CurrentWorld;
+
+                if (shiftingBlocks[0].TransitionAmount == 1.0f && shiftingBlocks[1].TransitionAmount == 1.0f)
                     shiftingBlocks.Clear();
-                }
             }
         }
 
@@ -179,7 +176,7 @@ namespace Skyblocks
                     Matrix transform = Matrix.CreateTranslation(blockPos);
 
                     boardPositionMatrices[x, y] = transform;
-                    layout[x, y].World = transform;
+                    layout[x, y].Destination = layout[x, y].PrevLocation = transform;
                 }
             }
         }
@@ -200,30 +197,6 @@ namespace Skyblocks
 
             if (shiftingBlocks.Count > 0)
             {
-                Matrix toTransform, fromTransform;
-
-                // Linearly interpolate between the world matrcies of the to and from blocks
-                // to eventually end up with them both in the other's original positioning.
-                Matrix.Lerp(ref boardPositionMatrices[shiftingBlocks[0].XLayoutPosition,
-                                                      shiftingBlocks[0].YLayoutPosition],
-                            ref boardPositionMatrices[shiftingBlocks[1].XLayoutPosition,
-                                                      shiftingBlocks[1].YLayoutPosition],
-                            currentShiftTime / shiftDuration,
-                            out fromTransform);
-                
-                Matrix.Lerp(ref boardPositionMatrices[shiftingBlocks[1].XLayoutPosition,
-                                                      shiftingBlocks[1].YLayoutPosition],
-                            ref boardPositionMatrices[shiftingBlocks[0].XLayoutPosition,
-                                                      shiftingBlocks[0].YLayoutPosition],
-                            currentShiftTime / shiftDuration,
-                            out toTransform); 
-
-               // boardPositionMatrices[shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition] = fromTransform;
-               // boardPositionMatrices[shiftingBlocks[1].XLayoutPosition, shiftingBlocks[1].YLayoutPosition] = toTransform;
-
-                shiftingBlocks[0].World = fromTransform;
-                shiftingBlocks[1].World = toTransform;
-
 
                 shiftingBlocks[0].Draw(screen.Camera, gameTime);
                 shiftingBlocks[1].Draw(screen.Camera, gameTime);
@@ -250,10 +223,145 @@ namespace Skyblocks
             shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
             shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
 
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            layout[selectedBlockX - 1, selectedBlockY].IsSelected = true;
+
             // Swap positions in the layout array.
             layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
             layout[selectedBlockX - 1, selectedBlockY] = shiftingBlocks[0];
 
+            
+            // Tell the board pieces to shift.
+            Matrix block1World, block2World;
+            block1World = shiftingBlocks[0].CurrentWorld;
+            block2World = shiftingBlocks[1].CurrentWorld;
+
+            shiftingBlocks[0].PrevLocation = block1World;
+            shiftingBlocks[1].PrevLocation = block2World;
+
+            shiftingBlocks[0].Destination = block2World;
+            shiftingBlocks[1].Destination = block1World;
+
+            shiftingBlocks[0].TransitionAmount = 0.0f;
+            shiftingBlocks[1].TransitionAmount = 0.0f;
+        }
+
+        public void SwapRight()
+        {
+            // Don't shift if the board is currently shifting.
+            if (IsShifting) return;
+
+            // Don't shift if the selected block is on the leftmost edge.
+            if (selectedBlockX == Width - 1) return;
+
+            // Don't shift if there are no blocks to the left of the selected
+            // block.
+            if (!layout[selectedBlockX + 1, selectedBlockY].IsActive) return;
+
+            // Tell the board to start shifting the selected blocks.
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
+            shiftingBlocks.Add(layout[selectedBlockX + 1, selectedBlockY]);
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            layout[selectedBlockX + 1, selectedBlockY].IsSelected = true;
+
+            // Swap positions in the layout array.
+            layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
+            layout[selectedBlockX + 1, selectedBlockY] = shiftingBlocks[0];
+
+
+            // Tell the board pieces to shift.
+            Matrix block1World, block2World;
+            block1World = shiftingBlocks[0].CurrentWorld;
+            block2World = shiftingBlocks[1].CurrentWorld;
+
+            shiftingBlocks[0].PrevLocation = block1World;
+            shiftingBlocks[1].PrevLocation = block2World;
+
+            shiftingBlocks[0].Destination = block2World;
+            shiftingBlocks[1].Destination = block1World;
+
+            shiftingBlocks[0].TransitionAmount = 0.0f;
+            shiftingBlocks[1].TransitionAmount = 0.0f;
+        }
+
+
+        public void SwapDown()
+        {
+            // Don't shift if the board is currently shifting.
+            if (IsShifting) return;
+
+            // Don't shift if the selected block is on the leftmost edge.
+            if (selectedBlockY == 0) return;
+
+            // Don't shift if there are no blocks to the left of the selected
+            // block.
+            if (!layout[selectedBlockX, selectedBlockY - 1].IsActive) return;
+
+            // Tell the board to start shifting the selected blocks.
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY - 1]);
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            layout[selectedBlockX, selectedBlockY - 1].IsSelected = true;
+
+            // Swap positions in the layout array.
+            layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
+            layout[selectedBlockX, selectedBlockY - 1] = shiftingBlocks[0];
+
+
+            // Tell the board pieces to shift.
+            Matrix block1World, block2World;
+            block1World = shiftingBlocks[0].CurrentWorld;
+            block2World = shiftingBlocks[1].CurrentWorld;
+
+            shiftingBlocks[0].PrevLocation = block1World;
+            shiftingBlocks[1].PrevLocation = block2World;
+
+            shiftingBlocks[0].Destination = block2World;
+            shiftingBlocks[1].Destination = block1World;
+
+            shiftingBlocks[0].TransitionAmount = 0.0f;
+            shiftingBlocks[1].TransitionAmount = 0.0f;
+        }
+
+        public void SwapUp()
+        {
+            // Don't shift if the board is currently shifting.
+            if (IsShifting) return;
+
+            // Don't shift if the selected block is on the leftmost edge.
+            if (selectedBlockY == Height - 1) return;
+
+            // Don't shift if there are no blocks to the left of the selected
+            // block.
+            if (!layout[selectedBlockX, selectedBlockY + 1].IsActive) return;
+
+            // Tell the board to start shifting the selected blocks.
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
+            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY + 1]);
+
+            layout[selectedBlockX, selectedBlockY].IsSelected = false;
+            layout[selectedBlockX, selectedBlockY + 1].IsSelected = true;
+
+            // Swap positions in the layout array.
+            layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
+            layout[selectedBlockX, selectedBlockY + 1] = shiftingBlocks[0];
+
+
+            // Tell the board pieces to shift.
+            Matrix block1World, block2World;
+            block1World = shiftingBlocks[0].CurrentWorld;
+            block2World = shiftingBlocks[1].CurrentWorld;
+
+            shiftingBlocks[0].PrevLocation = block1World;
+            shiftingBlocks[1].PrevLocation = block2World;
+
+            shiftingBlocks[0].Destination = block2World;
+            shiftingBlocks[1].Destination = block1World;
+
+            shiftingBlocks[0].TransitionAmount = 0.0f;
+            shiftingBlocks[1].TransitionAmount = 0.0f;
         }
 
         /// <summary>

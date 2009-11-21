@@ -104,6 +104,21 @@ namespace Skyblocks
                 board.SwapLeft();
             }
 
+            if (input.IsSwapRight(ControllingPlayer))
+            {
+                board.SwapRight();
+            }
+
+            if (input.IsSwapUp(ControllingPlayer))
+            {
+                board.SwapUp();
+            }
+
+            if (input.IsSwapDown(ControllingPlayer))
+            {
+                board.SwapDown();
+            }
+
             if (input.IsTurnLeft(ControllingPlayer))
             {
                 camera.TurnBoard(Camera.ShiftState.Left);

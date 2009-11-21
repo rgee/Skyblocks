@@ -32,16 +32,6 @@ namespace Skyblocks
             get { return isActive; }
         }
 
-        private Matrix world;
-        /// <summary>
-        /// The world matrix for this block.
-        /// </summary>
-        public Matrix World
-        {
-            get { return world; }
-            set { world = value; }
-        }
-
 
         private int xLayoutPosition;
         /// <summary>
@@ -70,6 +60,38 @@ namespace Skyblocks
             set { isSelected = value; }
         }
 
+
+
+        Matrix destination, prevLocation;
+
+        public Matrix Destination
+        {
+            get { return destination; }
+            set { destination = value; }
+        }
+        public Matrix PrevLocation
+        {
+            get { return prevLocation; }
+            set { prevLocation = value; }
+        }
+
+
+        float transitionAmount = 1.0f;
+        public float TransitionAmount
+        {
+            get { return transitionAmount; }
+            set { transitionAmount = value; }
+        }
+
+        public Matrix CurrentWorld
+        {
+            get
+            {
+                return Matrix.Lerp(prevLocation, destination, transitionAmount);
+            }
+        }
+
+
         public Block()
         {
             
@@ -93,7 +115,7 @@ namespace Skyblocks
                     {
                         effect.EnableDefaultLighting();
                         effect.PreferPerPixelLighting = true;
-                        effect.World = world * transforms[mesh.ParentBone.Index] *
+                        effect.World = CurrentWorld * transforms[mesh.ParentBone.Index] *
                                         Matrix.CreateRotationX(MathHelper.ToRadians(90)) *
                                         Matrix.CreateScale(new Vector3(1.0f, 1.0f, 0.1f));
                         if (isSelected)
@@ -111,5 +133,14 @@ namespace Skyblocks
                 }
             }
         }
+
+        public void Update()
+        {
+            if (transitionAmount < 1.0f)
+                transitionAmount += 0.05f;
+            if (transitionAmount > 1.0f)
+                transitionAmount = 1.0f;
+        }
+
     }
 }
