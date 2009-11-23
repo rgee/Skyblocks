@@ -56,8 +56,6 @@ namespace Skyblocks
 
                 if (selectedEntry >= menuEntries.Count)
                 {
-                    Trace.WriteLine("Rolling over the bottom");
-                    Trace.WriteLine(selectedEntry.ToString());
                     selectedEntry = 0;
                 }
             }

@@ -92,6 +92,7 @@ namespace Skyblocks
             get { return blocks; }
         }
 
+        ContentManager content;
 
         /// <summary>
         /// Is the board currently performing an animated shift?
@@ -144,8 +145,14 @@ namespace Skyblocks
 
         public void LoadContent()
         {
+            if (content == null)
+            {
+                content = new ContentManager(screen.ScreenManager.Game.Services, "Content");
+            }
+
+
             foreach (Block block in blocks)
-                block.LoadContent(screen.Content);
+                block.LoadContent(content);
 
             pieceTransforms = new Matrix[blocks[0].Model.Bones.Count];
             blocks[0].Model.CopyAbsoluteBoneTransformsTo(pieceTransforms);
@@ -169,6 +176,11 @@ namespace Skyblocks
                     layout[x, y].Destination = layout[x, y].PrevLocation = transform;
                 }
             }
+        }
+
+        public void UnloadContent()
+        {
+            content.Unload();
         }
 
         /// <summary>

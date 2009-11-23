@@ -207,6 +207,12 @@ namespace Skyblocks
         /// <param name="screen"></param>
         public void RemoveScreen(GameScreen screen)
         {
+            if (isInitialized)
+            {
+                screen.UnloadContent();
+            }
+
+
             screens.Remove(screen);
             screensToUpdate.Remove(screen);
         }

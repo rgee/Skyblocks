@@ -12,7 +12,7 @@ namespace Skyblocks
     public class GameplayScreen : GameScreen
     {
 
-
+        
         private Camera camera;
         /// <summary>
         /// The current camera being used.
@@ -42,8 +42,13 @@ namespace Skyblocks
             get { return content; }
         }
 
-        public GameplayScreen()
+        private int dimensions;
+
+        public GameplayScreen(int dimensions)
         {
+            this.dimensions = dimensions;
+
+
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
@@ -61,8 +66,25 @@ namespace Skyblocks
 
             board.LoadContent();
         }
+
+        public override void UnloadContent()
+        {
+            board.UnloadContent();
+
+            base.UnloadContent();
+        }
+
         public override void Draw(GameTime gameTime)
         {
+            /* Display error if 3d
+            if (dimensions == 3)
+            {
+                ScreenManager.SpriteBatch.DrawString(ScreenManager.Font,
+                    "3D Mode coming soon! Please enjoy 2 dimensions for now.",
+                    new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2),
+                    new Color(1.0f, 0.0f, 0.0f, 0.2f));
+            } */
+
             board.Draw(gameTime);
             base.Draw(gameTime);
         }
@@ -76,7 +98,9 @@ namespace Skyblocks
 
             if (input.IsPauseGame(ControllingPlayer))
             {
-                ExitScreen();
+                MessageBoxScreen messageBox = new MessageBoxScreen("Would you like to quit?");
+                messageBox.Accepted += QuitMessageBoxAccepted;
+                ScreenManager.AddScreen(messageBox, ControllingPlayer);
             }
 
             if (input.IsSelectLeft(ControllingPlayer))
@@ -147,5 +171,16 @@ namespace Skyblocks
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
 
+        private void QuitMessageBoxAccepted(Object sender, EventArgs e)
+        {
+            ExitToMainMenu();
+        }
+
+        private void ExitToMainMenu()
+        {
+            ExitScreen();
+            ScreenManager.AddScreen(new BackgroundScreen(), ControllingPlayer);
+            ScreenManager.AddScreen(new MainMenuScreen(), ControllingPlayer);
+        }
     }
 }

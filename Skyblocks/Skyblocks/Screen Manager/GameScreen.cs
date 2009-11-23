@@ -138,6 +138,9 @@ namespace Skyblocks
         /// </summary>
         public virtual void LoadContent() { }
 
+
+        public virtual void UnloadContent() { }
+
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                       bool coveredByOtherScreen)
         {

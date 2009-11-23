@@ -96,7 +96,7 @@ namespace Skyblocks
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
 
-            Vector2 origin = new Vector2(150, font.LineSpacing / 2);
+            Vector2 origin = new Vector2(140, font.LineSpacing / 2);
 
             spriteBatch.DrawString(font, text, position, color, 0,
                                     origin, scale, SpriteEffects.None, 0);

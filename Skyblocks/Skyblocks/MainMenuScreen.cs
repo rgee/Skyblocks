@@ -12,28 +12,43 @@ namespace Skyblocks
             : base("Main Menu")
         {
 
-            MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
+            MenuEntry play2DGameMenuEntry = new MenuEntry("Play Game (2D)");
+            MenuEntry play3DGameMenuEntry = new MenuEntry("Play Game (3D)");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
             
 
             // Hook event handlers
-            playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
+            play2DGameMenuEntry.Selected += PlayGame2DMenuEntrySelected;
+            play3DGameMenuEntry.Selected += PlayGame3DMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
-            MenuEntries.Add(playGameMenuEntry);
+            MenuEntries.Add(play2DGameMenuEntry);
+            MenuEntries.Add(play3DGameMenuEntry);
             MenuEntries.Add(exitMenuEntry);
         }
 
         /// <summary>
-        /// Event handler for when the play game option is selected.
+        /// Event handler for when the 2D play game option is selected.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void PlayGame2DMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             foreach (GameScreen screen in ScreenManager.GetScreens())
                 screen.ExitScreen();
-            ScreenManager.AddScreen(new GameplayScreen(), null);
+            ScreenManager.AddScreen(new GameplayScreen(2), null);
+        }
+
+        /// <summary>
+        /// Event handler for when the 3D play game option is selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void PlayGame3DMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            foreach (GameScreen screen in ScreenManager.GetScreens())
+                screen.ExitScreen();
+            ScreenManager.AddScreen(new GameplayScreen(3), null);
         }
 
         /// <summary>

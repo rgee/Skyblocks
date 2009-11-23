@@ -91,7 +91,6 @@ namespace Skyblocks
             float distance = ((float)Math.Max(boardWidth, boardHeight) * 400.0f / 5.0f);
 
             this.distance = distance / 100;
-            Trace.WriteLine(this.distance.ToString());
 
             prevPosition = new Vector3(0.0f, 0.0f, this.distance);
             destPosition = prevPosition;

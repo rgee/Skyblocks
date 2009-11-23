@@ -54,6 +54,9 @@ namespace Skyblocks
         }
 
         private bool isSelected;
+        /// <summary>
+        /// Is this block selected?
+        /// </summary>
         public bool IsSelected
         {
             get { return isSelected; }

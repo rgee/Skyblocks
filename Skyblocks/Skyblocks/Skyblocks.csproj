@@ -92,6 +92,7 @@
     <Compile Include="MainMenuScreen.cs" />
     <Compile Include="MenuEntry.cs" />
     <Compile Include="MenuScreen.cs" />
+    <Compile Include="MessageBoxScreen.cs" />
     <Compile Include="PlayerIndexEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

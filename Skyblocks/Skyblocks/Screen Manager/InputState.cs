@@ -93,6 +93,27 @@ namespace Skyblocks
             return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex);
         }
 
+
+        public bool IsMenuSelect(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Space, controllingPlayer, out playerIndex) ||
+                   IsNewKeyPress(Keys.Enter, controllingPlayer, out playerIndex);
+        }
+
+        /// <summary>
+        /// Check for the "menu cancel" input action.
+        /// </summary>
+        /// <param name="controllingPlayer">The player to check input for. If null, will check for any player's input.</param>
+        /// <param name="playerIndex">The index of the player who caused the menu cancel action.</param>
+        /// <returns></returns>
+        public bool IsMenuCancel(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Escape, controllingPlayer, out playerIndex);
+        }
+
+
         /// <summary>
         /// Check for the "menu up" input action.
         /// </summary>
