@@ -263,5 +263,20 @@ namespace Skyblocks
             PlayerIndex playerIndex;
             return IsNewKeyPress(Keys.NumPad2, controllingPlayer, out playerIndex);
         }
+
+
+        /// <summary>
+        /// Default turning mechanism is rotating the board.
+        /// Will eventually be set by user preferences, but for now,
+        /// rotate the board to the right. (Users' perspective)
+        /// </summary>
+        /// <param name="controllingPlayer"></param>
+        /// <returns></returns>
+        public bool IsTurnDefault(PlayerIndex? controllingPlayer)
+        {
+            PlayerIndex playerIndex;
+            return IsNewKeyPress(Keys.Tab, controllingPlayer, out playerIndex);
+
+        }
     }
 }

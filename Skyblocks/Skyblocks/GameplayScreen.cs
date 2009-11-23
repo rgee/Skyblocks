@@ -148,7 +148,7 @@ namespace Skyblocks
                 camera.TurnBoard(Camera.ShiftState.Left);
             }
             
-            if(input.IsTurnRight(ControllingPlayer))
+            if(input.IsTurnRight(ControllingPlayer) || input.IsTurnDefault(ControllingPlayer))
             {
                 camera.TurnBoard(Camera.ShiftState.Right);
             }
