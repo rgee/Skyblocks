@@ -13,9 +13,19 @@ namespace Skyblocks
     /// </summary>
     public class Block
     {
+        private Color color;
+        /// <summary>
+        /// The color of this block.
+        /// </summary>
+        public Color Color
+        {
+            get { return color; }
+            set { color = value; }
+        }
+
         private Model model;
         /// <summary>
-        /// Getter for the model for the purpose of measurements.
+        /// The model representation of this block.
         /// </summary>
         public Model Model
         {
@@ -97,6 +107,14 @@ namespace Skyblocks
         }
 
 
+        private float glowAmount = 1.0f;
+        public float GlowAmount
+        {
+            get { return glowAmount; }
+            set { glowAmount = value; }
+        }
+
+
         /// <summary>
         /// The current world matrix for this block.
         /// </summary>
@@ -137,11 +155,13 @@ namespace Skyblocks
                                         Matrix.CreateScale(new Vector3(1.0f, 1.0f, 0.1f));
                         if (isSelected)
                         {
-                            effect.AmbientLightColor = new Vector3(0.9f, 0.9f, 0.9f);
+                            if (glowAmount > 1.0f) glowAmount = 0.0f;
+                            glowAmount += 0.05f;
+                            effect.AmbientLightColor = color.ToVector3() + new Vector3(glowAmount, glowAmount, glowAmount);
                         }
                         else
                         {
-                            effect.AmbientLightColor = new Vector3(0f, 0f, 0f);
+                            effect.AmbientLightColor = color.ToVector3();
                         }
                         effect.View = cam.ViewMatrix;
                         effect.Projection = cam.ProjectionMatrix;
@@ -157,6 +177,12 @@ namespace Skyblocks
                 transitionAmount += 0.05f;
             if (transitionAmount > 1.0f)
                 transitionAmount = 1.0f;
+            if (glowAmount > 1.0f)
+                glowAmount = 0.0f;
+
+            
+
+
         }
 
     }

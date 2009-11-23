@@ -72,6 +72,16 @@ namespace Skyblocks
         }
 
         /// <summary>
+        /// The possible colors of the blocks on this board.
+        /// </summary>
+        private List<Color> colors;
+
+        /// <summary>
+        /// RNG
+        /// </summary>
+        private Random random;
+
+        /// <summary>
         /// 2D array of Piece representing the layout of the board. Used for
         /// game logic concerning the relative position of pieces on the board.
         /// </summary>
@@ -107,6 +117,15 @@ namespace Skyblocks
         {
             Debug.Assert((width <= 10) && (height <= 10));
 
+            random = new Random();
+            colors = new List<Color>();
+            colors.Add(Color.Red);
+            colors.Add(Color.Green);
+            colors.Add(Color.Purple);
+            colors.Add(Color.Blue);
+            colors.Add(Color.Yellow);
+            colors.Add(Color.SeaShell);
+
             this.width = width;
             this.height = height;
             this.screen = screen;
@@ -122,6 +141,7 @@ namespace Skyblocks
                     block.YLayoutPosition = y;
                     layout[x, y] = block;
 
+                    block.Color = colors[random.Next(colors.Count)];
                     blocks.Add(block);
                 }
             }

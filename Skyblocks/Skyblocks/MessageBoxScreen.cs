@@ -15,9 +15,20 @@ namespace Skyblocks
     {
         string message;
 
+        /// <summary>
+        /// The event handler for when the accept option is selected
+        /// </summary>
         public event EventHandler<EventArgs> Accepted;
+
+        /// <summary>
+        /// The event handler for when the cancel option is selected
+        /// </summary>
         public event EventHandler<EventArgs> Cancelled;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message"></param>
         public MessageBoxScreen(string message)
             : this(message, true)
         { }
@@ -37,6 +48,10 @@ namespace Skyblocks
             TransitionOffTime = TimeSpan.FromSeconds(0.3);
         }
 
+        /// <summary>
+        /// Handles keyboard events and fires accept/cancel events
+        /// </summary>
+        /// <param name="input"></param>
         public override void HandleInput(InputState input)
         {
             if (input.IsMenuSelect(ControllingPlayer))
@@ -70,6 +85,8 @@ namespace Skyblocks
             spriteBatch.Begin();
             spriteBatch.DrawString(font, message, textPos, color);
 
+            // Reset render states to make sure 3D rendering still works after this
+            // draw call.
             ScreenManager.GraphicsDevice.RenderState.DepthBufferEnable = true;
             ScreenManager.GraphicsDevice.RenderState.AlphaBlendEnable = false;
             ScreenManager.GraphicsDevice.RenderState.AlphaTestEnable = false;
