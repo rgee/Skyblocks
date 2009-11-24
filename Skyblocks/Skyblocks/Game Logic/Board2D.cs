@@ -152,6 +152,7 @@ namespace Skyblocks
         public void Update(GameTime gameTime)
         {
 
+
             if (IsShifting)
             {
                 shiftingBlocks[0].Update();
@@ -159,9 +160,15 @@ namespace Skyblocks
 
 
                 if (shiftingBlocks[0].TransitionAmount == 1.0f && shiftingBlocks[1].TransitionAmount == 1.0f)
+                {
+                    IsLegalMove(shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition);
+                    
                     shiftingBlocks.Clear();
+                }
             }
         }
+
+
 
         public void LoadContent()
         {
@@ -231,6 +238,9 @@ namespace Skyblocks
             // block.
             if (!layout[selectedBlockX - 1, selectedBlockY].IsActive) return;
 
+
+
+
             // Tell the board to start shifting the selected blocks.
             shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
             shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
@@ -241,6 +251,8 @@ namespace Skyblocks
             // Swap positions in the layout array.
             layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
             layout[selectedBlockX - 1, selectedBlockY] = shiftingBlocks[0];
+
+            if (IsLegalMove(selectedBlockX - 1, selectedBlockY)) Trace.WriteLine("MATCH");
 
             
             // Tell the board pieces to shift.
@@ -256,6 +268,7 @@ namespace Skyblocks
 
             shiftingBlocks[0].TransitionAmount = 0.0f;
             shiftingBlocks[1].TransitionAmount = 0.0f;
+
         }
 
         /// <summary>
@@ -353,7 +366,7 @@ namespace Skyblocks
             // Don't shift if the selected block is on the edge.
             if (selectedBlockY == Height - 1) return;
 
-            // Don't shift if there are no blocks to the left of the selected
+            // Don't shift if there are no blocks above the selected
             // block.
             if (!layout[selectedBlockX, selectedBlockY + 1].IsActive) return;
 
@@ -434,6 +447,27 @@ namespace Skyblocks
             layout[selectedBlockX, selectedBlockY].IsSelected = false;
             selectedBlockY++;
             layout[selectedBlockX, selectedBlockY].IsSelected = true;
+        }
+
+        private bool IsLegalMove(int x, int y)
+        {
+            Color blockColor = layout[x, y].Color;
+            bool foundMatch = false;
+
+            for (int i = x - 2; i <= x; i++)
+            {
+                if (i >= 0 && i + 2 < width)
+                {
+                    if (layout[x, y].Color == blockColor &&
+                        layout[x, y + 1].Color == blockColor &&
+                        layout[x, y + 2].Color == blockColor)
+                        foundMatch = true;
+                }
+            }
+            
+            Trace.WriteLine(foundMatch.ToString() + "at position " + selectedBlockX.ToString() + selectedBlockY.ToString());
+            return foundMatch;
+
         }
     }
 }

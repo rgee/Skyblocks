@@ -28,6 +28,7 @@ namespace Skyblocks
 
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            graphics.IsFullScreen = false;
 
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);

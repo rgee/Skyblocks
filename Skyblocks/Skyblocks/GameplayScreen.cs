@@ -126,11 +126,13 @@ namespace Skyblocks
             if (input.IsSwapLeft(ControllingPlayer))
             {
                 board.SwapLeft();
+                
             }
 
             if (input.IsSwapRight(ControllingPlayer))
             {
                 board.SwapRight();
+                board.SwapLeft();
             }
 
             if (input.IsSwapUp(ControllingPlayer))
