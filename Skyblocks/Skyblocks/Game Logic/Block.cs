@@ -40,6 +40,7 @@ namespace Skyblocks
         public bool IsActive
         {
             get { return isActive; }
+            set { isActive = value; }
         }
 
 
@@ -156,7 +157,7 @@ namespace Skyblocks
                         if (isSelected)
                         {
                             if (glowAmount > 1.0f) glowAmount = 0.0f;
-                            glowAmount += 0.05f;
+                            glowAmount += 0.02f;
                             effect.AmbientLightColor = color.ToVector3() + new Vector3(glowAmount, glowAmount, glowAmount);
                         }
                         else

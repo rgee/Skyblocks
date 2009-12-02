@@ -32,8 +32,8 @@ namespace Skyblocks
         }
 
 
-        private int selectedBlockX = 5;
-        private int selectedBlockY = 5;
+        private int selectedBlockX = 2;
+        private int selectedBlockY = 2;
 
 
         private float blockSize;
@@ -108,6 +108,12 @@ namespace Skyblocks
         /// </summary>
         private const int matchAmount = 3;
 
+        /// <summary>
+        /// A flag to tell the board to scan for groups
+        /// created during initialization and break them.
+        /// </summary>
+        private bool sanitizing = true;
+
         ContentManager content;
 
         /// <summary>
@@ -154,8 +160,85 @@ namespace Skyblocks
 
             layout[selectedBlockX, selectedBlockY].IsSelected = true;
 
-            // TODO: Scan the board for matches. If you find a match, break it by changing the color of 
-            // a block in the match.
+            // Analyze once to remove pre-made matches.
+            AnalyzeBoard();
+            sanitizing = false;
+        }
+
+
+        /// <summary>
+        /// Checks the entire board for matches.
+        /// </summary>
+        /// <returns></returns>
+        private bool AnalyzeBoard()
+        {
+            if (!IsShifting)
+            {
+                bool foundMatch = false;
+
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        if (layout[x, y].IsActive)
+                        {
+                            foundMatch |= AnalyzeGroup(x, y, 0, 1);
+                            foundMatch |= AnalyzeGroup(x, y, 1, 0);
+                        }
+                    }
+                }
+
+                return foundMatch;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Scans for a match in the specified direction. Sanitizes the group
+        /// if the board is set to sanitize.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
+        /// <returns></returns>
+        private bool AnalyzeGroup(int x, int y, int dx, int dy)
+        {
+            
+            Color colorToMatch = layout[x, y].Color;
+            int count = 0;
+            List<Block> matchedBlocks = new List<Block>();
+
+            for (int i = 0; i < matchAmount; i++, x += dx, y += dy)
+            {
+                if (x >= width) return false;
+                if (y >= height) return false;
+
+                matchedBlocks.Add(layout[x, y]);
+                if(layout[x, y].Color == colorToMatch)
+                    count++;
+            }
+            if (count == matchAmount)
+            {
+                if (sanitizing)
+                {
+                    Color randomColor = matchedBlocks[0].Color;
+                    while (randomColor == matchedBlocks[0].Color)
+                    {
+                        randomColor = colors[random.Next(colors.Count)];
+                    }
+                    matchedBlocks[random.Next(matchedBlocks.Count)].Color = randomColor;
+                    return true;
+                }
+                foreach (Block block in matchedBlocks)
+                {
+                    // For now we just set the block to not draw.
+                    // Animation to come.
+                    block.IsActive = false;
+                }
+                return true;
+            }
+            return false;
         }
 
         public void Update(GameTime gameTime)
@@ -170,11 +253,11 @@ namespace Skyblocks
 
                 if (shiftingBlocks[0].TransitionAmount == 1.0f && shiftingBlocks[1].TransitionAmount == 1.0f)
                 {
-                    IsLegalMove(shiftingBlocks[0].XLayoutPosition, shiftingBlocks[0].YLayoutPosition);
-                    
+
                     shiftingBlocks.Clear();
                 }
             }
+            AnalyzeBoard();
         }
 
 
@@ -227,7 +310,10 @@ namespace Skyblocks
         {
             foreach (Block block in blocks)
             {
-                block.Draw(screen.Camera, gameTime);
+                if (block.IsActive)
+                {
+                    block.Draw(screen.Camera, gameTime);
+                }
             }
 
         }
@@ -261,7 +347,6 @@ namespace Skyblocks
             layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
             layout[selectedBlockX - 1, selectedBlockY] = shiftingBlocks[0];
 
-            if (IsLegalMove(selectedBlockX - 1, selectedBlockY)) Trace.WriteLine("MATCH");
 
             
             // Tell the board pieces to shift.
@@ -456,27 +541,6 @@ namespace Skyblocks
             layout[selectedBlockX, selectedBlockY].IsSelected = false;
             selectedBlockY++;
             layout[selectedBlockX, selectedBlockY].IsSelected = true;
-        }
-
-        private bool IsLegalMove(int x, int y)
-        {
-            Color blockColor = layout[x, y].Color;
-            bool foundMatch = false;
-
-            for (int i = x - 2; i <= x; i++)
-            {
-                if (i >= 0 && i + 2 < width)
-                {
-                    if (layout[x, y].Color == blockColor &&
-                        layout[x, y + 1].Color == blockColor &&
-                        layout[x, y + 2].Color == blockColor)
-                        foundMatch = true;
-                }
-            }
-            
-            Trace.WriteLine(foundMatch.ToString() + "at position " + selectedBlockX.ToString() + selectedBlockY.ToString());
-            return foundMatch;
-
         }
     }
 }

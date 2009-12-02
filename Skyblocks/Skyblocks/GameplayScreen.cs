@@ -52,7 +52,7 @@ namespace Skyblocks
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            board = new Board2D(10, 10, this);
+            board = new Board2D(5, 5, this);
             camera = new Camera(board.Width, board.Height, 1280f / 720f);
         }
 
