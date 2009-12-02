@@ -222,19 +222,22 @@ namespace Skyblocks
             {
                 if (sanitizing)
                 {
+                    // Break up the group by changing one random block to a new random color.
                     Color randomColor = matchedBlocks[0].Color;
                     while (randomColor == matchedBlocks[0].Color)
                     {
                         randomColor = colors[random.Next(colors.Count)];
                     }
                     matchedBlocks[random.Next(matchedBlocks.Count)].Color = randomColor;
-                    return true;
                 }
-                foreach (Block block in matchedBlocks)
+                else
                 {
-                    // For now we just set the block to not draw.
-                    // Animation to come.
-                    block.IsActive = false;
+                    foreach (Block block in matchedBlocks)
+                    {
+                        // For now we just set the block to not draw.
+                        // Animation to come.
+                        block.IsActive = false;
+                    }
                 }
                 return true;
             }
