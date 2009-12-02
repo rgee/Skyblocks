@@ -35,7 +35,7 @@ namespace Skyblocks
 
         public MessageBoxScreen(string message, bool includeUsageText)
         {
-            const string usage = "\nEnter, Space = ok" + "\nEsc = cancel";
+            const string usage = "\n\nEnter, Space = ok" + "\nEsc = cancel";
 
             if (includeUsageText)
                 this.message = message + usage;
@@ -72,7 +72,7 @@ namespace Skyblocks
         {
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
-
+            
             ScreenManager.FadeToBlack(TransitionAlpha * 2 / 3);
 
             Viewport viewPort = ScreenManager.GraphicsDevice.Viewport;
@@ -84,7 +84,7 @@ namespace Skyblocks
 
             spriteBatch.Begin();
             spriteBatch.DrawString(font, message, textPos, color);
-
+            
             // Reset render states to make sure 3D rendering still works after this
             // draw call.
             ScreenManager.GraphicsDevice.RenderState.DepthBufferEnable = true;

@@ -46,9 +46,15 @@ namespace Skyblocks
         /// <param name="e"></param>
         void PlayGame3DMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
+            MessageBoxScreen dimensionWarningBox = new MessageBoxScreen("Sorry! 3D Mode coming soon!");
+            dimensionWarningBox.Accepted += WarningBoxAccepted;
+            ScreenManager.AddScreen(dimensionWarningBox, null);
+            
+            /*
             foreach (GameScreen screen in ScreenManager.GetScreens())
                 screen.ExitScreen();
             ScreenManager.AddScreen(new GameplayScreen(3), null);
+             */
         }
 
         /// <summary>
@@ -61,6 +67,11 @@ namespace Skyblocks
             base.OnCancel(playerIndex);
             foreach (GameScreen screen in ScreenManager.GetScreens())
                 screen.ExitScreen();
+        }
+
+        void WarningBoxAccepted(object sender, EventArgs e)
+        {
+            ScreenManager.GetScreens().Last().ExitScreen();
         }
     }
 }

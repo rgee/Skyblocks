@@ -46,13 +46,15 @@ namespace Skyblocks
 
         public GameplayScreen(int dimensions)
         {
+
+
             this.dimensions = dimensions;
 
 
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            board = new Board2D(5, 5, this);
+            board = new Board2D(10, 10, this);
             camera = new Camera(board.Width, board.Height, 1280f / 720f);
         }
 
@@ -76,15 +78,6 @@ namespace Skyblocks
 
         public override void Draw(GameTime gameTime)
         {
-            /* Display error if 3d
-            if (dimensions == 3)
-            {
-                ScreenManager.SpriteBatch.DrawString(ScreenManager.Font,
-                    "3D Mode coming soon! Please enjoy 2 dimensions for now.",
-                    new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2),
-                    new Color(1.0f, 0.0f, 0.0f, 0.2f));
-            } */
-
             board.Draw(gameTime);
             base.Draw(gameTime);
         }
