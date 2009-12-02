@@ -102,6 +102,12 @@ namespace Skyblocks
             get { return blocks; }
         }
 
+        /// <summary>
+        /// The number of blocks in a row the player needs to 
+        /// make a match.
+        /// </summary>
+        private const int matchAmount = 3;
+
         ContentManager content;
 
         /// <summary>
@@ -147,6 +153,9 @@ namespace Skyblocks
             }
 
             layout[selectedBlockX, selectedBlockY].IsSelected = true;
+
+            // TODO: Scan the board for matches. If you find a match, break it by changing the color of 
+            // a block in the match.
         }
 
         public void Update(GameTime gameTime)
