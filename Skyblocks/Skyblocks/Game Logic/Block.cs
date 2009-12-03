@@ -13,22 +13,6 @@ namespace Skyblocks
     /// </summary>
     public class Block
     {
-        public enum ShiftDirection
-        {
-            Left,
-            Right,
-            Up,
-            Down
-        }
-
-        private ShiftDirection shiftDirection;
-
-        public ShiftDirection ShiftDirection
-        {
-            get { return shiftDirection; }
-            set { shiftDirection = value; }
-        }
-
         private Color color;
         /// <summary>
         /// The color of this block.
