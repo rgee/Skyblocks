@@ -160,8 +160,8 @@ namespace Skyblocks
 
             layout[selectedBlockX, selectedBlockY].IsSelected = true;
 
-            // Analyze once to remove pre-made matches.
-            AnalyzeBoard();
+            // Analyze twice to attempt to remove pre-made matches.
+            for (int i = 0; i < 2; i++) AnalyzeBoard();
             sanitizing = false;
         }
 
@@ -191,6 +191,15 @@ namespace Skyblocks
                 return foundMatch;
             }
             return false;
+        }
+
+
+        private void DropColumn(int c, int r, int amount)
+        {
+            for (int i = r; i > 0; i--)
+            {
+
+            }
         }
 
         /// <summary>
@@ -246,8 +255,12 @@ namespace Skyblocks
 
         public void Update(GameTime gameTime)
         {
-
-
+            foreach (Block block in layout)
+            {
+                block.Update();
+                if (block.TransitionAmount == 1.0f) ResolveTransition(block);
+            }
+            /*
             if (IsShifting)
             {
                 shiftingBlocks[0].Update();
@@ -260,10 +273,30 @@ namespace Skyblocks
                     shiftingBlocks.Clear();
                 }
             }
+             */
             AnalyzeBoard();
         }
 
-
+        /// <summary>
+        /// Re-arrange the board's layout after a block has transitioned.
+        /// </summary>
+        /// <param name="block">A block that has finished a transition.</param>
+        private void ResolveTransition(Block block)
+        {
+            // TODO: Swap positions in the layout based on shift direction.
+            if (block.TransitionAmount != 1.0f) return;
+            switch (block.ShiftDirection)
+            {
+                case Block.ShiftDirection.Left:
+                    break;
+                case Block.ShiftDirection.Right:
+                    break;
+                case Block.ShiftDirection.Up:
+                    break;
+                case Block.ShiftDirection.Down:
+                    break;
+            }
+        }
 
         public void LoadContent()
         {
@@ -340,23 +373,21 @@ namespace Skyblocks
 
 
             // Tell the board to start shifting the selected blocks.
-            shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
-            shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
+            //shiftingBlocks.Add(layout[selectedBlockX, selectedBlockY]);
+            //shiftingBlocks.Add(layout[selectedBlockX - 1, selectedBlockY]);
 
             layout[selectedBlockX, selectedBlockY].IsSelected = false;
             layout[selectedBlockX - 1, selectedBlockY].IsSelected = true;
 
-            // Swap positions in the layout array.
-            layout[selectedBlockX, selectedBlockY] = shiftingBlocks[1];
-            layout[selectedBlockX - 1, selectedBlockY] = shiftingBlocks[0];
+
 
 
             
             // Tell the board pieces to shift.
             Matrix block1World, block2World;
-            block1World = shiftingBlocks[0].CurrentWorld;
-            block2World = shiftingBlocks[1].CurrentWorld;
-
+            block1World = layout[selectedBlockX, selectedBlockY].CurrentWorld;
+            block2World = layout[selectedBlockX - 1, selectedBlockY].CurrentWorld;
+            /*
             shiftingBlocks[0].PrevLocation = block1World;
             shiftingBlocks[1].PrevLocation = block2World;
 
@@ -365,7 +396,24 @@ namespace Skyblocks
 
             shiftingBlocks[0].TransitionAmount = 0.0f;
             shiftingBlocks[1].TransitionAmount = 0.0f;
+            */
+            
+            layout[selectedBlockX, selectedBlockY].PrevLocation = block1World;
+            layout[selectedBlockX - 1, selectedBlockY].PrevLocation = block2World;
 
+            layout[selectedBlockX, selectedBlockY].Destination = block2World;
+            layout[selectedBlockX - 1, selectedBlockY].Destination = block1World;
+
+            layout[selectedBlockX, selectedBlockY].TransitionAmount = 0.0f;
+            layout[selectedBlockX - 1, selectedBlockY].TransitionAmount = 0.0f;
+
+
+            layout[selectedBlockX, selectedBlockY].ShiftDirection = Block.ShiftDirection.Left;
+            layout[selectedBlockX - 1, selectedBlockY].ShiftDirection = Block.ShiftDirection.Right;
+
+            // Swap positions in the layout array.
+            //layout[selectedBlockX, selectedBlockY] = layout[selectedBlockX - 1, selectedBlockY];
+            //layout[selectedBlockX - 1, selectedBlockY] = layout[selectedBlockX, selectedBlockY];
         }
 
         /// <summary>
