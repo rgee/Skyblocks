@@ -161,7 +161,7 @@ namespace Skyblocks
             layout[selectedBlockX, selectedBlockY].IsSelected = true;
 
             // Analyze once to remove pre-made matches.
-            AnalyzeBoard();
+            for(int i = 0; i < 2; i++) AnalyzeBoard();
             sanitizing = false;
         }
 
