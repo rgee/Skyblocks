@@ -67,7 +67,7 @@ namespace Skyblocks
         {
             get
             {
-                return Vector3.Lerp(prevPosition, destPosition, transitionAmount);
+                return Vector3.SmoothStep(prevPosition, destPosition, transitionAmount);
             }
         }
 
@@ -80,6 +80,12 @@ namespace Skyblocks
             Left,
             Up,
             Down
+        }
+
+        private bool isShifting;
+        public bool IsShifting
+        {
+            get { return isShifting; }
         }
 
         /// <summary>
@@ -109,6 +115,10 @@ namespace Skyblocks
         {
             if (transitionAmount < 1.0f)
                 transitionAmount += 0.02f;
+            if (transitionAmount >= 1.0f)
+            {
+                isShifting = false;
+            }
 
         }
 
@@ -118,28 +128,32 @@ namespace Skyblocks
         /// <param name="state">The direction in which to turn.</param>
         public void TurnBoard(ShiftState state)
         {
-
+            if (isShifting) return;
             switch (state)
             {
                 case ShiftState.Up:
                     prevPosition = destPosition;
                     destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationX(MathHelper.ToRadians(-90)));
                     transitionAmount = 0.0f;
+                    isShifting = true;
                     break;
                 case ShiftState.Down:
                     prevPosition = destPosition;
                     destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationX(MathHelper.ToRadians(90)));
                     transitionAmount = 0.0f;
+                    isShifting = true;
                     break;
                 case ShiftState.Right:
                     prevPosition = destPosition;
                     destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationY(MathHelper.ToRadians(90)));
                     transitionAmount = 0.0f;
+                    isShifting = true;
                     break;
                 case ShiftState.Left:
                     prevPosition = destPosition;
                     destPosition = Vector3.Transform(CurrentPosition, Matrix.CreateRotationY(MathHelper.ToRadians(-90)));
                     transitionAmount = 0.0f;
+                    isShifting = true;
                     break;
             }
 
