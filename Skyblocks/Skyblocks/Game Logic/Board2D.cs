@@ -267,6 +267,14 @@ namespace Skyblocks
                 }
             }
             AnalyzeBoard();
+
+            for (int x=0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    instancedTransforms[(y * width) + x] = layout[x, y].CurrentWorld;
+                }
+            }
         }
 
 
@@ -288,6 +296,8 @@ namespace Skyblocks
             // Get the size of each block from it's bounding sphere.
             float sphereScale = Math.Max(pieceTransforms[0].M11, pieceTransforms[0].M22);
             blockSize = blocks[0].Model.Meshes[0].BoundingSphere.Radius * sphereScale * 1.9f;
+
+            instancedTransforms = new List<Matrix>();
 
             for (int y = 0; y < Height; y++)
             {
@@ -318,7 +328,7 @@ namespace Skyblocks
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
-
+            
             
             foreach (Block block in blocks)
             {

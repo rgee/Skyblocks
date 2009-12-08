@@ -141,6 +141,11 @@ namespace Skyblocks
             model = content.Load<Model>("Models//Cats");
         }
 
+        public void Draw(Matrix[] instancedTransforms, Camera cam)
+        {
+            // Draw instanced model
+        }
+
         public void Draw(Camera cam, GameTime gameTime)
         {
             if (isActive)
