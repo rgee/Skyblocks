@@ -14,6 +14,12 @@ namespace Skyblocks
     /// </summary>
     public class Board2D
     {
+
+
+        List<Matrix> instancedTransforms;
+
+
+
         /// <summary>
         /// An array that holds the two blocks that are currently shifting.
         /// Logically, no more than two blocks should be shifting at a time
@@ -295,7 +301,8 @@ namespace Skyblocks
                     blockPos *= blockSize;
 
                     Matrix transform = Matrix.CreateTranslation(blockPos);
-                    layout[x, y].Destination = layout[x, y].PrevLocation = transform;
+                    instancedTransforms.Add(transform);
+                    layout[x, y].Destination = layout[x, y].PrevLocation  = transform;
                 }
             }
         }
@@ -311,6 +318,8 @@ namespace Skyblocks
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
+
+            
             foreach (Block block in blocks)
             {
                 if (block.IsActive)
@@ -318,7 +327,6 @@ namespace Skyblocks
                     block.Draw(screen.Camera, gameTime);
                 }
             }
-
         }
 
         /// <summary>

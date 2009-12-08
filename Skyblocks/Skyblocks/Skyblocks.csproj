@@ -90,6 +90,8 @@
     <Compile Include="Game Logic\Camera.cs" />
     <Compile Include="Game Logic\Block.cs" />
     <Compile Include="GameplayScreen.cs" />
+    <Compile Include="InstancedModel.cs" />
+    <Compile Include="InstancedModelPart.cs" />
     <Compile Include="MainMenuScreen.cs" />
     <Compile Include="MenuEntry.cs" />
     <Compile Include="MenuScreen.cs" />

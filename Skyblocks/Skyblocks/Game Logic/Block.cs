@@ -33,6 +33,9 @@ namespace Skyblocks
         }
 
 
+        private InstancedModel instancedModel;
+
+
         private bool isActive = true;
         /// <summary>
         /// Is this block still on the board?
