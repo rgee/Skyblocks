@@ -243,11 +243,29 @@ namespace Skyblocks
                         // For now we just set the block to not draw.
                         // Animation to come.
                         block.IsActive = false;
+                        
                     }
                 }
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Scans the board and drops blocks down a row if there is a nothing below them.
+        /// </summary>
+        private void RepositionBlocks()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (!layout[x - 1, y].IsActive)
+                    {
+                        // figure this out...
+                    }
+                }
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -328,7 +346,7 @@ namespace Skyblocks
         /// <param name="gameTime"></param>
         public void Draw(GameTime gameTime)
         {
-            
+
             
             foreach (Block block in blocks)
             {
